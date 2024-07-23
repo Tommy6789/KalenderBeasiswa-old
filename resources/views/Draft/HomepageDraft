@@ -11,17 +11,18 @@
             </div>
             <div class="col-lg-8 align-self-baseline">
                 <p class="text-white-75 mb-5">Mulai Cari Beasiswa Untuk Studi Mu</p>
+                <a class="btn btn-primary btn-xl" href="{{ route('kalender_beasiswa.index') }}">Dashboard</a>
             </div>
         </div>
     </div>
 </header>
 
 @if (session('message') == 'No articles found')
-    <script>
-        window.onload = function() {
-            document.querySelector('#KalenderBeasiswa').scrollIntoView();
-        };
-    </script>
+<script>
+    window.onload = function() {
+        document.querySelector('#KalenderBeasiswa').scrollIntoView();
+    };
+</script>
 @endif
 
 <div class="container my-5">
@@ -31,37 +32,33 @@
             <div class="header">
                 <h1>Filter Beasiswa</h1>
                 <form id="filterForm" method="get" action="{{ route('beasiswa.filter') }}">
-                    {{-- Tingkat Studi Filter --}}
-                    <div class="form-group mt-4">
-                        <label for="option_tingkat_studi">Tingkat Studi</label>
-                        <select class="form-control multi-select" name="id_tingkat_studi[]" id="option_tingkat_studi" multiple>
-                            @foreach ($tingkat_studi as $i)
-                                <option value="{{ $i->id }}" {{ in_array($i->id, request('id_tingkat_studi', [])) ? 'selected' : '' }}>
-                                    {{ $i->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <div id="app">
+                        <!-- Tingkat Studi Filter -->
+                        <custom-select
+                            label="Tingkat Studi"
+                            name="id_tingkat_studi[]"
+                            :options="{{ json_encode($tingkat_studi->map->only(['id', 'nama'])) }}"
+                            :selected="{{ json_encode(request('id_tingkat_studi', [])) }}"
+                        ></custom-select>
 
-                    {{-- Jenis Beasiswa Filter --}}
-                    <div class="form-group mt-4">
-                        <label for="option_jenis_beasiswa">Jenis Beasiswa</label>
-                        <select class="form-control multi-select" name="jenis_beasiswa[]" id="option_jenis_beasiswa" multiple>
-                            <option value="Partial" {{ in_array('Partial', request('jenis_beasiswa', [])) ? 'selected' : '' }}>Partial</option>
-                            <option value="Full" {{ in_array('Full', request('jenis_beasiswa', [])) ? 'selected' : '' }}>Full</option>
-                        </select>
-                    </div>
+                        <!-- Jenis Beasiswa Filter -->
+                        <custom-select
+                            label="Jenis Beasiswa"
+                            name="jenis_beasiswa[]"
+                            :options="{{ json_encode([
+                                ['id' => 'Partial', 'nama' => 'Partial'],
+                                ['id' => 'Full', 'nama' => 'Full']
+                            ]) }}"
+                            :selected="{{ json_encode(request('jenis_beasiswa', [])) }}"
+                        ></custom-select>
 
-                    {{-- Negara Filter --}}
-                    <div class="form-group mt-4">
-                        <label for="option_negara">Negara</label>
-                        <select class="form-control multi-select" name="id_negara[]" id="option_negara" multiple>
-                            @foreach ($negara as $i)
-                                <option value="{{ $i->id }}" {{ in_array($i->id, request('id_negara', [])) ? 'selected' : '' }}>
-                                    {{ $i->nama }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <!-- Negara Filter -->
+                        <custom-select
+                            label="Negara"
+                            name="id_negara[]"
+                            :options="{{ json_encode($negara->map->only(['id', 'nama'])) }}"
+                            :selected="{{ json_encode(request('id_negara', [])) }}"
+                        ></custom-select>
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
@@ -126,17 +123,114 @@
     </div>
 </div>
 
-<!-- Multi-Select Library -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/css/multi-select-tag.css">
-<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/js/multi-select-tag.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Vue.js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
 <script>
-$(document).ready(function() {
-    // Initialize MultiSelectTag
-    new MultiSelectTag('option_tingkat_studi');
-    new MultiSelectTag('option_jenis_beasiswa');
-    new MultiSelectTag('option_negara');
+Vue.component('custom-select', {
+    props: ['label', 'name', 'options', 'selected'],
+    data() {
+        return {
+            isOpen: false,
+            selectedOptions: this.selected
+        };
+    },
+    template: `
+        <div class="form-group mt-4">
+            <div class="custom-select" @click.stop="toggleDropdown">
+                <div class="select-header">
+                    @{{ label }}
+                    <span class="toggle-icon">@{{ isOpen ? '▲' : '▼' }}</span>
+                </div>
+                <div class="dropdown" v-if="isOpen">
+                    <div v-for="option in options" :key="option.id" class="option">
+                        <label>
+                            <input type="checkbox" 
+                                   :checked="isSelected(option)" 
+                                   @change="toggleOption(option)"
+                                   :name="name" 
+                                   :value="option.id">
+                            @{{ option.nama }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+    methods: {
+        toggleDropdown() {
+            this.isOpen = !this.isOpen;
+        },
+        toggleOption(option) {
+            const index = this.selectedOptions.indexOf(option.id);
+            if (index === -1) {
+                this.selectedOptions.push(option.id);
+            } else {
+                this.selectedOptions.splice(index, 1);
+            }
+            this.$emit('input', this.selectedOptions); // Ensure the parent component is notified of changes
+        },
+        isSelected(option) {
+            return this.selectedOptions.includes(option.id);
+        },
+        closeDropdown(event) {
+            if (!this.$el.contains(event.target)) {
+                this.isOpen = false;
+            }
+        }
+    },
+    mounted() {
+        document.addEventListener('click', this.closeDropdown);
+    },
+    beforeDestroy() {
+        document.removeEventListener('click', this.closeDropdown);
+    }
+});
+
+new Vue({
+    el: '#app'
 });
 </script>
+
+<style>
+.custom-select {
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.select-header {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.toggle-icon {
+    font-size: 12px;
+}
+.dropdown {
+    border-top: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+}
+.option {
+    padding: 8px 10px;
+}
+.option:hover {
+    background-color: #f0f0f0;
+}
+.option label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+.option input[type="checkbox"] {
+    margin-right: 8px;
+}
+</style>
+
 @endsection

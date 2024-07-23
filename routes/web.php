@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BenuaController;
 use App\Http\Controllers\Frontend;
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\KalenderBeasiswaController;
 use App\Http\Controllers\LevelUserController;
 use App\Http\Controllers\LoginController;
@@ -38,10 +39,10 @@ Route::post('login_check', [LoginController::class, 'login_check'])->name('login
 Route::get('logout', [LoginController::class, 'logout'])->name('logout'); //loging out the account that currently used
 
 //Route frontend
-Route::get('homepage', [Frontend::class, 'homepage'])->name('homepage');
+Route::get('homepage', [FrontendController::class, 'homepage'])->name('homepage');
 // Route::get('detail', [Frontend::class, 'detail'])->name('detail');
-Route::get('detail/{id}', [Frontend::class, 'detail'])->name('detail');
-Route::get('filter', [Frontend::class, 'filter'])->name('beasiswa.filter');
+Route::get('detail/{id}', [FrontendController::class, 'detail'])->name('detail');
+Route::get('/filter', [FrontendController::class, 'filter'])->name('beasiswa.filter');
 
 Route::group(['middleware' => 'auth'], function () {
 

@@ -11,7 +11,6 @@
             </div>
             <div class="col-lg-8 align-self-baseline">
                 <p class="text-white-75 mb-5">Mulai Cari Beasiswa Untuk Studi Mu</p>
-                <a class="btn btn-primary btn-xl" href="{{ route('kalender_beasiswa.index') }}">Dashboard</a>
             </div>
         </div>
     </div>

@@ -21,8 +21,6 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
     <!-- Vue.js-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    {{-- Option Select --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/css/multi-select-tag.css">
 </head>
 
 <body id="page-top">
@@ -59,6 +57,10 @@
                             <a class="nav-link" href="#KalenderBeasiswa">Kalender Beasiswa</a>
                         </li>
                     @endif
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('kalender_beasiswa.index') }}">Dashboard</a>
+                    </li>
 
                     {{-- <li class="nav-item"><a class="nav-link" href="#portfolio">Portfolio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li> --}}

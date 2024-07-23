@@ -13,6 +13,7 @@
 <script src="{{ asset('js/scripts.js') }}"></script>
 <!-- SB Forms JS-->
 <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
 </body>
 
 </html>
