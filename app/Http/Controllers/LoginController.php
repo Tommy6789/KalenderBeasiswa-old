@@ -122,6 +122,12 @@ class LoginController extends Controller
         ]);
     }
 
+    public function logout()
+    {
+        Auth::logout(); // Log out the user
+        return redirect('/login'); // Redirect to the login page
+    }
+
     // public function forgot_password()
     // {
     //     return view('login.forgot_passsword');
@@ -192,10 +198,4 @@ class LoginController extends Controller
 
     //     return redirect()->route('login.index')->with('status', 'Your password has been reset!');
     // }
-
-    public function logout()
-    {
-        Auth::logout(); // Log out the user
-        return redirect('/login'); // Redirect to the login page
-    }
 }

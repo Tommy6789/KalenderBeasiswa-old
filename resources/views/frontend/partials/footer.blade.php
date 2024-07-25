@@ -14,6 +14,26 @@
 <!-- SB Forms JS-->
 <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set moment.js to use Indonesian locale
+        moment.locale('id');
+
+        // Format all date elements on the page
+        document.querySelectorAll('.date-registrasi').forEach(function(element) {
+            let date = element.textContent.trim();
+            let formattedDate = moment(date, 'YYYY-MM-DD').format('DD MMMM YYYY');
+            element.textContent = formattedDate;
+        });
+
+        document.querySelectorAll('.date-deadline').forEach(function(element) {
+            let date = element.textContent.trim();
+            let formattedDate = moment(date, 'YYYY-MM-DD').format('DD MMMM YYYY');
+            element.textContent = formattedDate;
+        });
+    });
+</script>
+
 </body>
 
 </html>

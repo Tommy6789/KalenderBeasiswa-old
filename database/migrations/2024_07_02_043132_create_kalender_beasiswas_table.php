@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('tes_standard');
             $table->string('dokumen');
             $table->string('lainnya');
-            $table->enum('status_tampil',['1','0'] );
+            $table->enum('status_tampil',['0','1'] );
             $table->timestamps();
 
             $table->foreign('id_tingkat_studi')->references('id')->on('tingkat_studis');

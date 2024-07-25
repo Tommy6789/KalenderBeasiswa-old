@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('frontend', function () {
-    return view('frontend.homepage');
+    return view('frontend.home');
 });
 
 //Login, Register, Logout
@@ -39,10 +39,12 @@ Route::post('login_check', [LoginController::class, 'login_check'])->name('login
 Route::get('logout', [LoginController::class, 'logout'])->name('logout'); //loging out the account that currently used
 
 //Route frontend
-Route::get('homepage', [FrontendController::class, 'homepage'])->name('homepage');
-// Route::get('detail', [Frontend::class, 'detail'])->name('detail');
+Route::get('home', [FrontendController::class, 'home'])->name('home');
+Route::get('kalender', [FrontendController::class, 'kalender'])->name('kalender');
 Route::get('detail/{id}', [FrontendController::class, 'detail'])->name('detail');
 Route::get('/filter', [FrontendController::class, 'filter'])->name('beasiswa.filter');
+Route::get('/register/{id}', [FrontendController::class, 'daftarBeasiswa'])->name('daftar_beasiswa');
+Route::get('wishlist', [FrontendController::class, 'wishlist'])->name('wishlist');
 
 Route::group(['middleware' => 'auth'], function () {
 
